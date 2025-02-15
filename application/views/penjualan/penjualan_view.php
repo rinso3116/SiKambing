@@ -33,7 +33,7 @@
 							</strong>
 						</div>
 						<div class="card-body text-center">
-							<hr>
+							<br>
 							<h5 class="text-muted mb-3">Total Penjualan Susu:</h5>
 							<h1 class="display-5 fw-bold text-danger">
 								<?php echo number_format($total_penjualan, 0, ',', '.') . ' Liter'; ?>

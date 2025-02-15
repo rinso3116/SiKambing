@@ -19,6 +19,12 @@ class Model_pemasukan extends CI_Model
         return $this->db->affected_rows() > 0;
     }
 
+    public function update_pemasukan($id_pemasukan, $data)
+    {
+        $this->db->where('id_pemasukan', $id_pemasukan);
+        return $this->db->update('pemasukan', $data);
+    }
+
     public function total_pemasukan()
     {
         $this->db->select_sum('jumlah');

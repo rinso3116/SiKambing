@@ -14,10 +14,10 @@ class Pencatatan extends CI_Controller
     private function set_output($data)
     {
         $this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($data, JSON_PRETTY_PRINT))
-        ->_display();
+            ->set_status_header(200)
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($data, JSON_PRETTY_PRINT))
+            ->_display();
         exit;
     }
 
@@ -25,6 +25,13 @@ class Pencatatan extends CI_Controller
     {
         $data['stok'] = $this->Model_susu->get_stok_susu();
         $data['total_susu'] = $this->Model_susu->total_susu();
+        // Jika request dari AJAX, kirimkan JSON tanpa reload
+        if ($this->input->is_ajax_request()) {
+            echo json_encode([
+                'total_susu' => number_format($data['total_susu'], 0, ',', '.')
+            ]);
+            return;
+        }
         $data['pencatatan'] = $this->Model_pencatatan->list_pencatatan();
         $data['navbar'] = 'pencatatan';
         $data['title'] = 'Pencatatan Susu - SiKambing';
@@ -44,7 +51,7 @@ class Pencatatan extends CI_Controller
                 $key->jumlah_susu . " liter",
                 $key->keterangan,
                 '<a href="javascript:;" data-id="' . $key->id_pencatatan . '" class="btn btn-warning btn-pencatatan-edit btn-sm m-1">Edit</a>' .
-                '<a href="javascript:;" data-id="' . $key->id_pencatatan . '" class="btn btn-info btn-pencatatan-detail btn-sm m-1">Detail</a>',
+                    '<a href="javascript:;" data-id="' . $key->id_pencatatan . '" class="btn btn-info btn-pencatatan-detail btn-sm m-1">Detail</a>',
             );
             array_push($daftar_input, $bahan_input);
         };

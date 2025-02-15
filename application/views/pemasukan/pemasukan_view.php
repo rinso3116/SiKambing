@@ -33,7 +33,7 @@
 							</strong>
 						</div>
 						<div class="card-body text-center">
-							<hr>
+							<br>
 							<h5 class="text-muted mb-3">Total Pemasukan Kandang:</h5>
 							<h1 class="display-5 fw-bold text-primary">
 								Rp <?php echo number_format($total_pemasukan, 0, ',', '.'); ?>
@@ -159,30 +159,20 @@
 			// Konfigurasi tombol edit pemasukan
 			$(document).on("click", ".btn-pemasukan-edit", function() {
 				let frame = $("#pemasukan_modal");
-
-				frame.find(".modal-title").html("Edit pemasukan");
+				frame.find(".modal-title").html("Edit Pemasukan");
 				frame.find(".modal-dinamis").html(pesan_loading);
 				frame.modal("show");
+
 				let id_pemasukan = $(this).data("id");
 
 				$.get("<?= site_url('pemasukan/pemasukan_edit'); ?>/" + id_pemasukan, function(res) {
 					frame.find(".modal-dinamis").html(res);
-
-					// Event submit form edit
-					frame.find("#form-edit-pemasukan").on("submit", function(e) {
-						e.preventDefault();
-						let data = $(this).serialize();
-						$.post($(this).attr("action"), data, function(res) {
-							if (res.status == "sukses") {
-								toastr.success("pemasukan berhasil diperbarui!", "Berhasil");
-								frame.modal("hide");
-								table_pencatatan.ajax.reload();
-							} else {
-								toastr.error(res.pesan, "Gagal");
-							}
-						});
-					});
 				});
+			});
+
+			// Toastr alert jika pemasukan berasal dari transaksi penjualan
+			$(document).on("click", ".btn-alert-edit", function() {
+				toastr.warning("Pemasukan ini berasal dari penjualan. Silakan edit di menu penjualan.");
 			});
 		});
 	</script>

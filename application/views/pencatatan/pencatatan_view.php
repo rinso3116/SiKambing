@@ -28,9 +28,7 @@
                 <div class="col-12">
                     <div class="card shadow-lg border-10">
                         <div class="card-header bg-primary text-white text-center">
-                            <strong>
-                                <p class="mb-0" style="font-size: 25px;">Stok Susu</p>
-                            </strong>
+                            <strong><p class="mb-0" style="font-size: 25px;">Stok Susu</p></strong>
                         </div>
                         <br>
                         <div class="card-body text-center">
@@ -60,7 +58,7 @@
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a href="javascript:;" class="btn btn-success btn-pencatatan-add me-md-2 justify-content-md-end">
                             Tambah Data
-                        </a>
+                        </a>                    
                     </div>
                 </div>
                 <div class="card-body">
@@ -111,8 +109,7 @@
                 </div>
                 <div class="modal-body modal-dinamis">
                     <!-- Konten detail akan dimuat di sini -->
-                </div>
-                <div class="modal-footer">
+                </div>                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
@@ -156,27 +153,28 @@
                 frame.modal("show");
                 let id_pencatatan = $(this).data("id");
 
-                $.get("<?= site_url('pencatatan/pencatatan_edit'); ?>/" + id_pencatatan, function(res) {
+                $.get("<?= site_url('pencatatan/pencatatan_edit'); ?>/"+id_pencatatan, function(res) {
                     frame.find(".modal-dinamis").html(res);
                 });
             });
 
             // Konfigurasi tombol detail pencatatan
             $(document).on("click", ".btn-pencatatan-detail", function() {
-                let id_pencatatan = $(this).data("id"); // Ambil ID pencatatan dari tombol
-                let frame = $("#pencatatan_detail_modal"); // Referensi ke modal
+            let id_pencatatan = $(this).data("id"); // Ambil ID pencatatan dari tombol
+            let frame = $("#pencatatan_detail_modal"); // Referensi ke modal
 
-                frame.find(".modal-title").html("Detail Pencatatan Susu");
-                frame.find(".modal-dinamis").html(pesan_loading);
-                frame.modal("show");
+            frame.find(".modal-title").html("Detail Pencatatan");
+            frame.find(".modal-dinamis").html(pesan_loading);
+            frame.modal("show");
 
-                // AJAX untuk mendapatkan form detail
-                $.get("<?= site_url('pencatatan/pencatatan_detail/') ?>" + encodeURIComponent(id_pencatatan), function(res) {
+            // AJAX untuk mendapatkan form detail
+            $.get("<?= site_url('pencatatan/pencatatan_detail/') ?>" + encodeURIComponent(id_pencatatan), function(res) {
                     frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pencatatan_detail.php
                 }).fail(function() {
                     frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pencatatan.</p>');
                 });
             });
+            
         });
     </script>
 </div>

@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Update</button>
+        <button type="submit" class="btn btn-primary">Update</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             <i class="bx bx-x d-block d-sm-none"></i>
             <span class="d-none d-sm-block">Close</span>
@@ -20,34 +20,45 @@
 </form>
 
 <script type="text/javascript">
-  $(document).ready(function() {
-        // Submit form via AJAX
-    $('#form-pencatatan-edit').on('submit', function(e) {
-            e.preventDefault(); // Prevent form from submitting normally
-
-            // Serialize form data
-            var formData = new FormData(this); // 'this' refers to the form element
-
-            // AJAX request
+    $(document).ready(function() {
+        function updateTotalSusu() {
             $.ajax({
-                url: '<?= site_url("pencatatan/pencatatan_update") ?>', // Change to your form action URL
+                url: "<?= site_url('pencatatan') ?>", // Panggil fungsi index yang sudah support AJAX
+                type: "GET",
+                dataType: "json",
+                success: function(response) {
+                    $("#total_susu").html(response.total_susu + ' Liter'); // Update langsung
+                },
+                error: function(xhr, status, error) {
+                    console.error("Gagal memperbarui total susu:", error);
+                }
+            });
+        }
+
+        $('#form-pencatatan-edit').on('submit', function(e) {
+            e.preventDefault(); // Mencegah reload
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                url: '<?= site_url("pencatatan/pencatatan_update") ?>',
                 type: 'POST',
                 data: formData,
                 contentType: false,
                 processData: false,
 
                 success: function(response) {
-                    // Jika berhasil
                     toastr.success('Pencatatan berhasil diupdate!', 'Sukses');
 
                     $('#pencatatan_modal').modal('hide');
-                    $('#table_pencatatan').DataTable().ajax.reload(); // Memperbarui DataTable
+                    $('#table_pencatatan').DataTable().ajax.reload(); // Refresh DataTable
+
+                    updateTotalSusu(); // Update total susu setelah edit berhasil
                 },
                 error: function(xhr, status, error) {
-                    // Jika terjadi error
                     toastr.error('Terjadi kesalahan saat update data Pencatatan.', 'Error');
                 }
             });
         });
-});
+    });
 </script>

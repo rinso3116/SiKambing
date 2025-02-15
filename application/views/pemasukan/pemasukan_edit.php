@@ -1,23 +1,13 @@
-<form id="form-penjualan-edit" action="<?php echo site_url('penjualan/penjualan_update'); ?>" method="post" autocomplete="off">
-  <input type="hidden" id="id_penjualan" name="id_penjualan" value="<?php echo $penjualan->id_penjualan; ?>">
+<form id="form-pemasukan-edit" action="<?php echo site_url('pemasukan/pemasukan_update'); ?>" method="post" autocomplete="off">
+  <input type="hidden" id="id_pemasukan" name="id_pemasukan" value="<?php echo $pemasukan->id_pemasukan; ?>">
   <div class="modal-body">
-    <div class="row mb-3">
-      <div class="col-md-6">
-        <label for="edit_jumlah_susu" class="form-label">Jumlah Susu (liter)</label>
-        <input type="number" class="form-control" id="edit_jumlah_susu" name="edit_jumlah_susu" value="<?php echo $penjualan->jumlah_susu; ?>" required>
-      </div>
-      <div class="col-md-6">
-        <label for="edit_harga_per_liter" class="form-label">Harga per Liter</label>
-        <input type="text" class="form-control" id="edit_harga_per_liter" name="edit_harga_per_liter" value="<?php echo number_format($penjualan->harga_per_liter, 0, ',', '.'); ?>" required>
-      </div>
+    <div class="mb-3">
+      <label for="jumlah" class="form-label">Jumlah Pemasukan</label>
+      <input type="text" class="form-control" id="jumlah" name="jumlah" value="<?php echo number_format($pemasukan->jumlah, 0, ',', '.'); ?>" required>
     </div>
     <div class="mb-3">
-      <label for="edit_menjual_ke" class="form-label">Menjual ke</label>
-      <input type="text" class="form-control" id="edit_menjual_ke" name="edit_menjual_ke" value="<?php echo $penjualan->menjual_ke; ?>" required>
-    </div>
-    <div class="mb-3">
-      <label for="edit_keterangan" class="form-label">Keterangan</label>
-      <textarea class="form-control" id="edit_keterangan" name="edit_keterangan" rows="3"><?php echo $penjualan->keterangan; ?></textarea>
+      <label for="keterangan" class="form-label">Keterangan</label>
+      <textarea class="form-control" id="keterangan" name="keterangan" rows="3"><?php echo $pemasukan->keterangan; ?></textarea>
     </div>
   </div>
   <div class="modal-footer">
@@ -30,17 +20,48 @@
 </form>
 
 <script>
-    // Menambahkan format angka pada input harga per liter
+  // Menambahkan format angka pada input Jumlah Pemasukan
   $(document).ready(function() {
-        // Format nilai input sebagai format angka (misalnya 1.000,00)
-    $('#edit_harga_per_liter').on('input', function() {
-            var value = $(this).val().replace(/\D/g, ''); // Hapus karakter selain angka
-            $(this).val(formatCurrency(value));
-          });
+    // Format nilai input sebagai format angka (misalnya 1.000,00)
+    $('#jumlah').on('input', function() {
+      var value = $(this).val().replace(/\D/g, ''); // Hapus karakter selain angka
+      $(this).val(formatCurrency(value));
+    });
 
     function formatCurrency(value) {
-            var formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Format ribuan
-            return formatted;
-          }
-        });
-      </script>
+      var formatted = value.replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Format ribuan
+      return formatted;
+    }
+  });
+
+  $(document).ready(function() {
+    // Submit form via AJAX
+    $('#form-pemasukan-edit').on('submit', function(e) {
+      e.preventDefault(); // Prevent form from submitting normally
+
+      // Serialize form data
+      var formData = new FormData(this); // 'this' refers to the form element
+
+      // AJAX request
+      $.ajax({
+        url: '<?= site_url("pemasukan/pemasukan_update") ?>', // Change to your form action URL
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+
+        success: function(response) {
+          // Jika berhasil
+          toastr.success('pemasukan berhasil diupdate!', 'Sukses');
+
+          $('#pemasukan_modal').modal('hide');
+          $('#table_pemasukan').DataTable().ajax.reload(); // Memperbarui DataTable
+        },
+        error: function(xhr, status, error) {
+          // Jika terjadi error
+          toastr.error('Terjadi kesalahan saat update data pemasukan.', 'Error');
+        }
+      });
+    });
+  });
+</script>

@@ -192,32 +192,4 @@ class Penjualan extends CI_Controller
         $data['penjualan'] = $this->Model_penjualan->single_penjualan($id_penjualan);
         $this->load->view('penjualan/penjualan_detail', $data);
     }
-    public function penjualan_delete_post()
-    {
-        $id_penjualan = $this->input->post('id_penjualan');
-        $check_penjualan = $this->Model_penjualan->single_penjualan($id_penjualan);
-
-        if (!$check_penjualan) {
-            $response = array(
-                'status' => 'gagal',
-                'pesan' => 'Data penjualan tidak ditemukan'
-            );
-            $this->set_output($response);
-        }
-        $check_digunakan = $this->Model_penjualan->single_penjualan($id_penjualan);
-        if ($check_digunakan) {
-            $response = array(
-                'status' => 'gagal',
-                'pesan' => 'penjualan ini masih digunakan, tidak bisa dihapus!'
-            );
-            $this->set_output($response);
-        }
-        $this->Model_penjualan->delete_penjualan($id_penjualan);
-        $response = array(
-            'status' => 'sukses',
-            'pesan' => 'Data penjualan berhasil dihapus'
-        );
-
-        $this->set_output($response);
-    }
 }
