@@ -15,10 +15,10 @@ class Penjualan extends CI_Controller
     private function set_output($data)
     {
         $this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($data, JSON_PRETTY_PRINT))
-        ->_display();
+            ->set_status_header(200)
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($data, JSON_PRETTY_PRINT))
+            ->_display();
         exit;
     }
 
@@ -42,14 +42,14 @@ class Penjualan extends CI_Controller
 
         foreach ($daftar_penjualan as $key) {
             $bahan_input = array(
-            $nomor++, // Gunakan nomor urut, bukan ID Penjualan
-            $key->jumlah_susu . " liter", // Tambahkan " liter" di belakang jumlah susu
-            "Rp. " . number_format($key->harga_per_liter, 0, ',', '.'), // Format harga per liter
-            "Rp. " . number_format($key->total_harga, 0, ',', '.'), // Format total harga
-            $key->menjual_ke,
-            '<a href="javascript:;" data-id="' . $key->id_penjualan . '" class="btn btn-warning btn-penjualan-edit btn-sm m-1">Edit</a>' .
-            '<a href="javascript:;" class="btn btn-info btn-sm btn-penjualan-detail" data-id="' . $key->id_penjualan . '">Detail</a>',
-        );
+                $nomor++, // Gunakan nomor urut, bukan ID Penjualan
+                $key->jumlah_susu . " liter", // Tambahkan " liter" di belakang jumlah susu
+                "Rp. " . number_format($key->harga_per_liter, 0, ',', '.'), // Format harga per liter
+                "Rp. " . number_format($key->total_harga, 0, ',', '.'), // Format total harga
+                $key->menjual_ke,
+                '<a href="javascript:;" data-id="' . $key->id_penjualan . '" class="btn btn-warning btn-penjualan-edit btn-sm m-1">Edit</a>' .
+                    '<a href="javascript:;" class="btn btn-info btn-sm btn-penjualan-detail" data-id="' . $key->id_penjualan . '">Detail</a>',
+            );
             array_push($daftar_input, $bahan_input);
         };
         $response = array(
@@ -134,17 +134,17 @@ class Penjualan extends CI_Controller
         $menjual_ke = $this->input->post('menjual_ke');
         $keterangan = $this->input->post('keterangan');
 
-    // Ambil data penjualan lama
+        // Ambil data penjualan lama
         $penjualan_lama = $this->Model_penjualan->single_penjualan($id_penjualan);
         $jumlah_susu_lama = $penjualan_lama->jumlah_susu;
 
-    // Ambil stok susu saat ini
+        // Ambil stok susu saat ini
         $stok_susu = $this->Model_susu->get_stok_susu()->stok_susu;
 
-    // Hitung perubahan stok
+        // Hitung perubahan stok
         $selisih_susu = $jumlah_susu_baru - $jumlah_susu_lama;
 
-    // Jika stok bertambah (karena jumlah susu berkurang), kembalikan ke stok
+        // Jika stok bertambah (karena jumlah susu berkurang), kembalikan ke stok
         if ($selisih_susu < 0) {
             $this->Model_susu->update_jumlah_susu(abs($selisih_susu)); // Tambah stok
         }
@@ -157,10 +157,10 @@ class Penjualan extends CI_Controller
             $this->Model_susu->update_jumlah_susu(-$selisih_susu); // Kurangi stok
         }
 
-    // Hitung total harga baru jika ada perubahan jumlah susu atau harga per liter
+        // Hitung total harga baru jika ada perubahan jumlah susu atau harga per liter
         $total_harga_baru = $jumlah_susu_baru * $harga_per_liter_baru;
 
-    // Data yang akan diupdate
+        // Data yang akan diupdate
         $data_update = [
             'jumlah_susu' => $jumlah_susu_baru,
             'harga_per_liter' => $harga_per_liter_baru,
@@ -170,11 +170,11 @@ class Penjualan extends CI_Controller
             'tanggal' => date('Y-m-d H:i:s')
         ];
 
-    // Update penjualan
+        // Update penjualan
         $update = $this->Model_penjualan->update_penjualan($id_penjualan, $data_update);
 
         if ($update) {
-        // Update pemasukan jika harga berubah
+            // Update pemasukan jika harga berubah
             $data_pemasukan = [
                 'jumlah' => $total_harga_baru,
                 'keterangan' => "Update penjualan susu ke " . $menjual_ke . ". " . $keterangan,
@@ -187,16 +187,11 @@ class Penjualan extends CI_Controller
             echo json_encode(["status" => "gagal", "pesan" => "Gagal memperbarui data!"]);
         }
     }
-
-
     public function penjualan_detail($id_penjualan)
     {
-        $this->load->model('Model_penjualan');
-        $data = $this->Model_penjualan->single_penjualan($id_penjualan);
-        echo json_encode($data);
+        $data['penjualan'] = $this->Model_penjualan->single_penjualan($id_penjualan);
+        $this->load->view('penjualan/penjualan_detail', $data);
     }
-
-
     public function penjualan_delete_post()
     {
         $id_penjualan = $this->input->post('id_penjualan');

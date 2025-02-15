@@ -133,23 +133,24 @@
 			$(document).on("click", ".btn-penjualan-add", function() {
 				let frame = $("#penjualan_modal");
 
-                // Menampilkan pesan loading
+				// Menampilkan pesan loading
 				frame.find(".modal-body").html(pesan_loading);
 
-                // Menampilkan modal
+				// Menampilkan modal
 				frame.modal("show");
 
-                // Mengambil form tambah penjualan
+				// Mengambil form tambah penjualan
 				$.get("<?= site_url('penjualan/penjualan_add'); ?>", function(res) {
 					frame.find(".modal-body").html(res);
 				});
 			});
 
+			// Konfigurasi tombol detail penjualan
 			$(document).on("click", ".btn-penjualan-detail", function() {
 				let id_penjualan = $(this).data("id"); // Ambil ID penjualan dari tombol
 				let frame = $("#penjualan_detail_modal"); // Referensi ke modal
 
-				frame.find(".modal-title").html("Detail penjualan");
+				frame.find(".modal-title").html("Detail penjualan Susu");
 				frame.find(".modal-dinamis").html(pesan_loading);
 				frame.modal("show");
 
@@ -161,50 +162,6 @@
 				});
 			});
 
-
-		// 	// Konfigurasi tombol edit penjualan
-		// 	$(document).on("click", ".btn-penjualan-edit", function() {
-		// 		let frame = $("#penjualan_modal");
-
-		// 		frame.find(".modal-title").html("Edit penjualan");
-		// 		frame.find(".modal-dinamis").html(pesan_loading);
-		// 		frame.modal("show");
-
-		// 		let id_penjualan = $(this).data("id");
-
-		// 		$.get("<?= site_url('penjualan/penjualan_edit'); ?>/" + id_penjualan, function(res) {
-		// 			frame.find(".modal-dinamis").html(res);
-
-        // // Pastikan form di dalam modal bisa di-submit
-		// 			frame.find("#form-edit-penjualan").off("submit").on("submit", function(e) {
-		// 				e.preventDefault();
-		// 				let data = $(this).serialize();
-
-        //     			console.log("Data yang dikirim:", data); // Debugging
-
-        //     			$.post($(this).attr("action"), data, function(res) {
-        //     				if (res.status == "sukses") {
-        //     					toastr.success("Penjualan berhasil diperbarui!", "Berhasil");
-
-        //             // Delay agar modal benar-benar tertutup setelah update sukses
-        //     					setTimeout(() => {
-        //     						frame.modal("hide");
-        //     					}, 500);
-
-        //             // Pastikan tabel benar-benar di-reload
-        //     					setTimeout(() => {
-        //                 table_pencatatan.ajax.reload(null, false); // false = tidak reset paging
-        //             }, 800);
-        //     				} else {
-        //     					toastr.error(res.pesan, "Gagal");
-        //     				}
-        //     			}, "json").fail(function() {
-        //     				toastr.error("Terjadi kesalahan pada server!", "Gagal");
-        //     			});
-        //     		});
-		// 		});
-		// 	});
-
 			// Konfigurasi tombol edit penjualan
 			$(document).on("click", ".btn-penjualan-edit", function() {
 				let frame = $("#penjualan_modal");
@@ -214,10 +171,10 @@
 				frame.modal("show");
 				let id_penjualan = $(this).data("id");
 
-				$.get("<?= site_url('penjualan/penjualan_edit'); ?>/"+id_penjualan, function(res) {
+				$.get("<?= site_url('penjualan/penjualan_edit'); ?>/" + id_penjualan, function(res) {
 					frame.find(".modal-dinamis").html(res);
 
-                    // Event submit form edit
+					// Event submit form edit
 					frame.find("#form-edit-penjualan").on("submit", function(e) {
 						e.preventDefault();
 						let data = $(this).serialize();

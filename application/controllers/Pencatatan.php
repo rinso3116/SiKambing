@@ -120,35 +120,4 @@ class Pencatatan extends CI_Controller
         $data['pencatatan'] = $this->Model_pencatatan->single_pencatatan($id_pencatatan);
         $this->load->view('pencatatan/pencatatan_detail', $data);
     }
-
-
-
-    public function pencatatan_delete_post()
-    {
-        $id_pencatatan = $this->input->post('id_pencatatan');
-        $check_pencatatan = $this->Model_pencatatan->single_pencatatan($id_pencatatan);
-
-        if (!$check_pencatatan) {
-            $response = array(
-                'status' => 'gagal',
-                'pesan' => 'Data pencatatan tidak ditemukan'
-            );
-            $this->set_output($response);
-        }
-        $check_digunakan = $this->Model_pencatatan->single_buku_pencatatan($id_pencatatan);
-        if ($check_digunakan) {
-            $response = array(
-                'status' => 'gagal',
-                'pesan' => 'pencatatan ini masih digunakan, tidak bisa dihapus!'
-            );
-            $this->set_output($response);
-        }
-        $this->Model_pencatatan->delete_pencatatan($id_pencatatan);
-        $response = array(
-            'status' => 'sukses',
-            'pesan' => 'Data pencatatan berhasil dihapus'
-        );
-
-        $this->set_output($response);
-    }
 }
