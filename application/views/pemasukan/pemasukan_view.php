@@ -99,7 +99,7 @@
 	<div class="modal fade" id="pemasukan_detail_modal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
 		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
-				<div class="modal-header bg-info">
+				<div class="modal-header">
 					<h5 class="modal-title" id="modalTitle"></h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
@@ -123,127 +123,38 @@
 
 			let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
 
-			// Konfigurasi tombol hapus pemasukan
-			$(document).on("click", ".btn-pemasukan-delete", function() {
-				var id_pemasukan = $(this).data("id");
-				var url = "<?= site_url('pemasukan/pemasukan_delete_post'); ?>";
-
-				bootbox.confirm({
-					message: "Apakah Anda yakin ingin menghapus pemasukan ini?",
-					buttons: {
-						confirm: {
-							label: "Hapus",
-							className: "btn-danger"
-						},
-						cancel: {
-							label: "Batal",
-							className: "btn-secondary"
-						}
-					},
-					callback: function(result) {
-						if (result) {
-							$.post(url, {
-								id_pemasukan: id_pemasukan
-							}, function(res) {
-								if (res.status == "sukses") {
-									toastr.success(res.pesan);
-									table_pemasukan.ajax.reload();
-								} else {
-									toastr.warning(res.pesan);
-								}
-							});
-						}
-					}
-				});
-			});
-
+			// Konfigurasi tombol tambah pemasukan
 			$(document).on("click", ".btn-pemasukan-add", function() {
 				let frame = $("#pemasukan_modal");
 
-				frame.find(".modal-title").html("Tambah pemasukan");
-				frame.find(".modal-dinamis").html(pesan_loading);
+				// Menampilkan pesan loading
+				frame.find(".modal-body").html(pesan_loading);
+
+				// Menampilkan modal
 				frame.modal("show");
 
+				// Mengambil form tambah pemasukan
 				$.get("<?= site_url('pemasukan/pemasukan_add'); ?>", function(res) {
-					frame.find(".modal-dinamis").html(res);
-
-					// Event submit form tambah pemasukan
-					frame.find("#form-pemasukan-add").on("submit", function(e) {
-						e.preventDefault();
-						let form = $(this);
-						let data = form.serialize();
-
-						$.ajax({
-							url: form.attr("action"),
-							type: "POST",
-							data: data,
-							dataType: "json",
-							success: function(res) {
-								console.log("Response dari server:", res); // Debugging
-
-								if (res.status === "sukses") {
-									toastr.success(res.pesan, "Berhasil");
-
-									// Tutup modal setelah sukses
-									frame.modal("hide");
-
-									// Tunggu 1.5 detik sebelum reload agar toastr terlihat
-									setTimeout(function() {
-										location.reload();
-									}, 1000);
-								} else {
-									toastr.error(res.pesan, "Gagal");
-								}
-							},
-							error: function(xhr, status, error) {
-								console.error("AJAX Error:", error);
-								toastr.error("Terjadi kesalahan pada server!", "Error");
-							}
-						});
-					});
+					frame.find(".modal-body").html(res);
 				});
 			});
 
-			// $(document).on("click", ".btn-pencatatan-detail", function() {
-			// 	let frame = $("#pencatatan_detail_modal");
-
-			// 	frame.find(".modal-title").html("Tambah pencatatan");
-			// 	frame.find(".modal-dinamis").html(pesan_loading);
-			// 	frame.modal("show");
-
-			// 	$.get("<?= site_url('pencatatan/pencatatan_detail'); ?>", function(res) {
-			// 		frame.find(".modal-dinamis").html(res);
-
-			//         // Event submit form tambah
-			// 		frame.find("#form-tambah-pencatatan").on("submit", function(e) {
-			// 			e.preventDefault();
-			// 			let data = $(this).serialize();
-			// 			$.post($(this).attr("action"), data, function(res) {
-			// 				if (res.status == "sukses") {
-			// 					toastr.success("pencatatan berhasil ditambahkan!", "Berhasil");
-			// 					frame.modal("hide");
-			// 					table_pencatatan.ajax.reload();
-			// 				} else {
-			// 					toastr.error(res.pesan, "Gagal");
-			// 				}
-			// 			});
-			// 		});
-			// 	});
-			// });
-
+			// Konfigurasi tombol detail pemasukan
 			$(document).on("click", ".btn-pemasukan-detail", function() {
-				var id_pemasukan = $(this).data('id'); // Ambil ID pemasukan dari tombol yang diklik
+				let id_pemasukan = $(this).data("id"); // Ambil ID pemasukan dari tombol
+				let frame = $("#pemasukan_detail_modal"); // Referensi ke modal
 
-				var frame = $("#pemasukan_detail_modal");
-				frame.find(".modal-title").html("Detail pemasukan");
+				frame.find(".modal-title").html("Detail pemasukan Susu");
 				frame.find(".modal-dinamis").html(pesan_loading);
 				frame.modal("show");
 
-				$.get("<?php echo site_url('pemasukan/pemasukan_detail'); ?>/" + id_pemasukan, function(res) {
-					frame.find(".modal-dinamis").html(res); // Isi modal dengan form detail
+				// AJAX untuk mendapatkan form detail
+				$.get("<?= site_url('pemasukan/pemasukan_detail/') ?>" + encodeURIComponent(id_pemasukan), function(res) {
+					frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pemasukan_detail.php
+				}).fail(function() {
+					frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pemasukan.</p>');
 				});
 			});
-
 
 			// Konfigurasi tombol edit pemasukan
 			$(document).on("click", ".btn-pemasukan-edit", function() {

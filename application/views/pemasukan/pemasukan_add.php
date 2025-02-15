@@ -54,4 +54,36 @@
     let hargaInput = document.getElementById('jumlah');
     hargaInput.value = toNumber(hargaInput.value);
   });
+
+  //konfigurasi pemasukan addsave
+  $(document).ready(function() {
+    // Submit form via AJAX
+    $('#form-pemasukan-add').on('submit', function(e) {
+      e.preventDefault(); // Prevent form from submitting normally
+
+      // Serialize form data
+      var formData = new FormData(this); // 'this' refers to the form element
+
+      // AJAX request
+      $.ajax({
+        url: '<?= site_url("pemasukan/pemasukan_addsave") ?>', // Change to your form action URL
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+
+        success: function(response) {
+          // Jika berhasil
+          toastr.success('pemasukan berhasil ditambahkan!', 'Sukses');
+
+          $('#pemasukan_modal').modal('hide');
+          $('#table_pemasukan').DataTable().ajax.reload(); // Memperbarui DataTable
+        },
+        error: function(xhr, status, error) {
+          // Jika terjadi error
+          toastr.error('Terjadi kesalahan saat menambahkan pemasukan.', 'Error');
+        }
+      });
+    });
+  });
 </script>

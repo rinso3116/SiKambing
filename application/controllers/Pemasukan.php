@@ -12,10 +12,10 @@ class Pemasukan extends CI_Controller
     private function set_output($data)
     {
         $this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($data, JSON_PRETTY_PRINT))
-        ->_display();
+            ->set_status_header(200)
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($data, JSON_PRETTY_PRINT))
+            ->_display();
         exit;
     }
 
@@ -41,7 +41,7 @@ class Pemasukan extends CI_Controller
                 $key->keterangan,
                 $key->tanggal,
                 '<a href="javascript:;" data-id="' . $key->id_pemasukan . '" class="btn btn-warning btn-pemasukan-edit btn-sm m-1">Edit</a>' .
-                '<a href="javascript:;" class="btn btn-info btn-sm btn-pemasukan-detail" data-id="' . $key->id_pemasukan . '">Detail</a>',
+                    '<a href="javascript:;" class="btn btn-info btn-sm btn-pemasukan-detail" data-id="' . $key->id_pemasukan . '">Detail</a>',
             );
             array_push($daftar_input, $bahan_input);
         };
@@ -83,5 +83,11 @@ class Pemasukan extends CI_Controller
             echo json_encode(["status" => "gagal", "pesan" => "Gagal menyimpan pemasukan!"]);
         }
         exit;
+    }
+
+    public function pemasukan_detail($id_pemasukan)
+    {
+        $data['pemasukan'] = $this->Model_pemasukan->single_pemasukan($id_pemasukan);
+        $this->load->view('pemasukan/pemasukan_detail', $data);
     }
 }
