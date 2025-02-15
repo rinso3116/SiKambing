@@ -3,9 +3,9 @@
 		<div class="sidebar-header">
 			<div class="d-flex justify-content-between">
 				<div class="logo">
-					<a href="<?= site_url('dashboard'); ?>"><img src="<?= base_url('assets/assets/images/logo/sikambing.png') ?>" 
-						alt="SiKambing Logo"
-						style="width: 230px; height: auto;">
+					<a href="<?= site_url('dashboard'); ?>"><img src="<?= base_url('assets/assets/images/logo/sikambing.png') ?>"
+							alt="SiKambing Logo"
+							style="width: 230px; height: auto;">
 					</a>
 				</div>
 				<div class="toggler">
@@ -57,6 +57,12 @@
 					<a href="<?= site_url('pemasukan') ?>" class='sidebar-link'>
 						<i class="bi bi-wallet-fill"></i>
 						<span>Pemasukan Kandang</span>
+					</a>
+				</li>
+				<li class="sidebar-item <?= ($uri == 'pengeluaran') ? 'active' : ''; ?>">
+					<a href="<?= site_url('pengeluaran') ?>" class='sidebar-link'>
+						<i class="bi bi-wallet-fill"></i>
+						<span>Pengeluaran Kandang</span>
 					</a>
 				</li>
 			</ul>
