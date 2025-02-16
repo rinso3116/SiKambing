@@ -127,10 +127,9 @@
 			$(document).on("click", ".btn-pemasukan-add", function() {
 				let frame = $("#pemasukan_modal");
 
-				// Menampilkan pesan loading
+				frame.find(".modal-title").html("Tambah Pemasukan");
 				frame.find(".modal-body").html(pesan_loading);
-
-				// Menampilkan modal
+				frame.find(".modal-footer").html(""); // Hapus tombol lama
 				frame.modal("show");
 
 				// Mengambil form tambah pemasukan
@@ -160,7 +159,8 @@
 			$(document).on("click", ".btn-pemasukan-edit", function() {
 				let frame = $("#pemasukan_modal");
 				frame.find(".modal-title").html("Edit Pemasukan");
-				frame.find(".modal-dinamis").html(pesan_loading);
+				frame.find(".modal-body").html(pesan_loading);
+				frame.find(".modal-footer").html(""); // Hapus tombol lama
 				frame.modal("show");
 
 				let id_pemasukan = $(this).data("id");

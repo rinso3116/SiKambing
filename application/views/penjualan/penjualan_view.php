@@ -133,10 +133,9 @@
 			$(document).on("click", ".btn-penjualan-add", function() {
 				let frame = $("#penjualan_modal");
 
-				// Menampilkan pesan loading
+				frame.find(".modal-title").html("Tambah penjualan");
 				frame.find(".modal-body").html(pesan_loading);
-
-				// Menampilkan modal
+				frame.find(".modal-footer").html(""); // Hapus tombol lama
 				frame.modal("show");
 
 				// Mengambil form tambah penjualan
@@ -167,7 +166,8 @@
 				let frame = $("#penjualan_modal");
 
 				frame.find(".modal-title").html("Edit penjualan");
-				frame.find(".modal-dinamis").html(pesan_loading);
+				frame.find(".modal-body").html(pesan_loading);
+				frame.find(".modal-footer").html(""); // Hapus tombol lama
 				frame.modal("show");
 				let id_penjualan = $(this).data("id");
 
