@@ -1,13 +1,13 @@
-<form id="form-pemasukan-edit" action="<?php echo site_url('pemasukan/pemasukan_update'); ?>" method="post" autocomplete="off">
-  <input type="hidden" id="id_pemasukan" name="id_pemasukan" value="<?php echo $pemasukan->id_pemasukan; ?>">
+<form id="form-pengeluaran-edit" action="<?php echo site_url('pengeluaran/pengeluaran_update'); ?>" method="post" autocomplete="off">
+  <input type="hidden" id="id_pengeluaran" name="id_pengeluaran" value="<?php echo $pengeluaran->id_pengeluaran; ?>">
   <div class="modal-body">
     <div class="mb-3">
-      <label for="jumlah" class="form-label">Jumlah Pemasukan</label>
-      <input type="text" class="form-control" id="jumlah" name="jumlah" value="<?php echo number_format($pemasukan->jumlah, 0, ',', '.'); ?>" required>
+      <label for="jumlah" class="form-label">Jumlah pengeluaran</label>
+      <input type="text" class="form-control" id="jumlah" name="jumlah" value="<?php echo number_format($pengeluaran->jumlah, 0, ',', '.'); ?>" required>
     </div>
     <div class="mb-3">
       <label for="keterangan" class="form-label">Keterangan</label>
-      <textarea class="form-control" id="keterangan" name="keterangan" rows="3"><?php echo $pemasukan->keterangan; ?></textarea>
+      <textarea class="form-control" id="keterangan" name="keterangan" rows="3"><?php echo $pengeluaran->keterangan; ?></textarea>
     </div>
   </div>
   <div class="modal-footer">
@@ -20,7 +20,7 @@
 </form>
 
 <script>
-  // Menambahkan format angka pada input Jumlah Pemasukan
+  // Menambahkan format angka pada input Jumlah pengeluaran
   $(document).ready(function() {
     // Format nilai input sebagai format angka (misalnya 1.000,00)
     $('#jumlah').on('input', function() {
@@ -36,7 +36,7 @@
 
   $(document).ready(function() {
     // Submit form via AJAX
-    $('#form-pemasukan-edit').on('submit', function(e) {
+    $('#form-pengeluaran-edit').on('submit', function(e) {
       e.preventDefault(); // Prevent form from submitting normally
 
       // Serialize form data
@@ -44,7 +44,7 @@
 
       // AJAX request
       $.ajax({
-        url: '<?= site_url("pemasukan/pemasukan_update") ?>', // Change to your form action URL
+        url: '<?= site_url("pengeluaran/pengeluaran_update") ?>', // Change to your form action URL
         type: 'POST',
         data: formData,
         contentType: false,
@@ -52,14 +52,14 @@
 
         success: function(response) {
           // Jika berhasil
-          toastr.success('pemasukan berhasil diupdate!', 'Sukses');
+          toastr.success('pengeluaran berhasil diupdate!', 'Sukses');
 
-          $('#pemasukan_modal').modal('hide');
-          $('#table_pemasukan').DataTable().ajax.reload(); // Memperbarui DataTable
+          $('#pengeluaran_modal').modal('hide');
+          $('#table_pengeluaran').DataTable().ajax.reload(); // Memperbarui DataTable
         },
         error: function(xhr, status, error) {
           // Jika terjadi error
-          toastr.error('Terjadi kesalahan saat update data pemasukan.', 'Error');
+          toastr.error('Terjadi kesalahan saat update data pengeluaran.', 'Error');
         }
       });
     });

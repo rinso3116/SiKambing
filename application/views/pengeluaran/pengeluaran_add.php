@@ -1,8 +1,8 @@
-<form id="form-pemasukan-add" action="<?php echo site_url('pemasukan/pemasukan_addsave'); ?>" method="post" autocomplete="off">
+<form id="form-pengeluaran-add" action="<?php echo site_url('pengeluaran/pengeluaran_addsave'); ?>" method="post" autocomplete="off">
   <div class="modal-body">
     <div class="mb-3">
-      <label for="jumlah">Jumlah Pemasukan (Rp)</label>
-      <input type="text" class="form-control" id="jumlah" name="jumlah" placeholder="Masukkan jumlah pemasukan" required>
+      <label for="jumlah">Jumlah pengeluaran (Rp)</label>
+      <input type="text" class="form-control" id="jumlah" name="jumlah" placeholder="Masukkan jumlah pengeluaran" required>
     </div>
     <div class="mb-3">
       <label for="keterangan">Keterangan</label>
@@ -49,16 +49,16 @@
   });
 
   // Event listener untuk form submit
-  document.getElementById('form-pemasukan-add').addEventListener('submit', function(e) {
+  document.getElementById('form-pengeluaran-add').addEventListener('submit', function(e) {
     // Konversi nilai Rupiah kembali ke angka sebelum submit
     let hargaInput = document.getElementById('jumlah');
     hargaInput.value = toNumber(hargaInput.value);
   });
 
-  //konfigurasi pemasukan addsave
+  //konfigurasi pengeluaran addsave
   $(document).ready(function() {
     // Submit form via AJAX
-    $('#form-pemasukan-add').on('submit', function(e) {
+    $('#form-pengeluaran-add').on('submit', function(e) {
       e.preventDefault(); // Prevent form from submitting normally
 
       // Serialize form data
@@ -66,7 +66,7 @@
 
       // AJAX request
       $.ajax({
-        url: '<?= site_url("pemasukan/pemasukan_addsave") ?>', // Change to your form action URL
+        url: '<?= site_url("pengeluaran/pengeluaran_addsave") ?>', // Change to your form action URL
         type: 'POST',
         data: formData,
         contentType: false,
@@ -74,14 +74,14 @@
 
         success: function(response) {
           // Jika berhasil
-          toastr.success('pemasukan berhasil ditambahkan!', 'Sukses');
+          toastr.success('pengeluaran berhasil ditambahkan!', 'Sukses');
 
-          $('#pemasukan_modal').modal('hide');
-          $('#table_pemasukan').DataTable().ajax.reload(); // Memperbarui DataTable
+          $('#pengeluaran_modal').modal('hide');
+          $('#table_pengeluaran').DataTable().ajax.reload(); // Memperbarui DataTable
         },
         error: function(xhr, status, error) {
           // Jika terjadi error
-          toastr.error('Terjadi kesalahan saat menambahkan pemasukan.', 'Error');
+          toastr.error('Terjadi kesalahan saat menambahkan pengeluaran.', 'Error');
         }
       });
     });
