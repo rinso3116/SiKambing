@@ -117,62 +117,98 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var table_pengeluaran = $("#table_pengeluaran").DataTable({
-				"ajax": "<?= site_url('pengeluaran/pengeluaran_daftar'); ?>"
+			var table = $('#table_pengeluaran').DataTable({
+				"ajax": {
+					"url": "<?= site_url('pengeluaran/pengeluaran_daftar') ?>",
+					"type": "GET"
+				},
+				dom: 'Bfrtip', // Menampilkan tombol di atas tabel
+				buttons: [{
+						extend: 'excelHtml5',
+						text: 'Export ke Excel',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'pdfHtml5',
+						text: 'Export ke PDF',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'print',
+						text: 'Cetak',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'colvis',
+						text: 'Pilih Kolom'
+					}
+				],
+				responsive: true,
+				language: {
+					url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/id.json' // Bahasa Indonesia
+				}
 			});
+		});
 
-			let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
+		let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
 
-			// Konfigurasi tombol tambah pengeluaran
-			$(document).on("click", ".btn-pengeluaran-add", function() {
-				let frame = $("#pengeluaran_modal");
+		// Konfigurasi tombol tambah pengeluaran
+		$(document).on("click", ".btn-pengeluaran-add", function() {
+			let frame = $("#pengeluaran_modal");
 
-				frame.find(".modal-title").html("Tambah Pengeluaran");
-				frame.find(".modal-body").html(pesan_loading);
-				frame.find(".modal-footer").html(""); // Hapus tombol lama
-				frame.modal("show");
-				// Mengambil form tambah pengeluaran
-				$.get("<?= site_url('pengeluaran/pengeluaran_add'); ?>", function(res) {
-					frame.find(".modal-body").html(res);
-				});
+			frame.find(".modal-title").html("Tambah Pengeluaran");
+			frame.find(".modal-body").html(pesan_loading);
+			frame.find(".modal-footer").html(""); // Hapus tombol lama
+			frame.modal("show");
+			// Mengambil form tambah pengeluaran
+			$.get("<?= site_url('pengeluaran/pengeluaran_add'); ?>", function(res) {
+				frame.find(".modal-body").html(res);
 			});
+		});
 
-			// Konfigurasi tombol detail pengeluaran
-			$(document).on("click", ".btn-pengeluaran-detail", function() {
-				let id_pengeluaran = $(this).data("id"); // Ambil ID pengeluaran dari tombol
-				let frame = $("#pengeluaran_detail_modal"); // Referensi ke modal
+		// Konfigurasi tombol detail pengeluaran
+		$(document).on("click", ".btn-pengeluaran-detail", function() {
+			let id_pengeluaran = $(this).data("id"); // Ambil ID pengeluaran dari tombol
+			let frame = $("#pengeluaran_detail_modal"); // Referensi ke modal
 
-				frame.find(".modal-title").html("Detail pengeluaran Susu");
-				frame.find(".modal-dinamis").html(pesan_loading);
-				frame.modal("show");
+			frame.find(".modal-title").html("Detail pengeluaran Susu");
+			frame.find(".modal-dinamis").html(pesan_loading);
+			frame.modal("show");
 
-				// AJAX untuk mendapatkan form detail
-				$.get("<?= site_url('pengeluaran/pengeluaran_detail/') ?>" + encodeURIComponent(id_pengeluaran), function(res) {
-					frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pengeluaran_detail.php
-				}).fail(function() {
-					frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pengeluaran.</p>');
-				});
+			// AJAX untuk mendapatkan form detail
+			$.get("<?= site_url('pengeluaran/pengeluaran_detail/') ?>" + encodeURIComponent(id_pengeluaran), function(res) {
+				frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pengeluaran_detail.php
+			}).fail(function() {
+				frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pengeluaran.</p>');
 			});
+		});
 
-			// Konfigurasi tombol edit pengeluaran
-			$(document).on("click", ".btn-pengeluaran-edit", function() {
-				let frame = $("#pengeluaran_modal");
-				frame.find(".modal-title").html("Edit Pengeluaran");
-				frame.find(".modal-body").html(pesan_loading);
-				frame.find(".modal-footer").html(""); // Hapus tombol lama
-				frame.modal("show");
+		// Konfigurasi tombol edit pengeluaran
+		$(document).on("click", ".btn-pengeluaran-edit", function() {
+			let frame = $("#pengeluaran_modal");
+			frame.find(".modal-title").html("Edit Pengeluaran");
+			frame.find(".modal-body").html(pesan_loading);
+			frame.find(".modal-footer").html(""); // Hapus tombol lama
+			frame.modal("show");
 
-				let id_pengeluaran = $(this).data("id");
+			let id_pengeluaran = $(this).data("id");
 
-				$.get("<?= site_url('pengeluaran/pengeluaran_edit'); ?>/" + id_pengeluaran, function(res) {
-					frame.find(".modal-dinamis").html(res);
-				});
+			$.get("<?= site_url('pengeluaran/pengeluaran_edit'); ?>/" + id_pengeluaran, function(res) {
+				frame.find(".modal-dinamis").html(res);
 			});
+		});
 
-			// Toastr alert jika pengeluaran berasal dari transaksi penjualan
-			$(document).on("click", ".btn-alert-edit", function() {
-				toastr.warning("pengeluaran ini berasal dari penjualan. Silakan edit di menu penjualan.");
-			});
+		// Toastr alert jika pengeluaran berasal dari transaksi penjualan
+		$(document).on("click", ".btn-alert-edit", function() {
+			toastr.warning("pengeluaran ini berasal dari penjualan. Silakan edit di menu penjualan.");
 		});
 	</script>
 

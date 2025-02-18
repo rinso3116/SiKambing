@@ -74,15 +74,42 @@
 						<span>Pengaturan User</span>
 					</a>
 				</li>
-				<li class="sidebar-title">Filter Laporan</li>
-				<li class="sidebar-item <?= ($uri == 'laporan') ? 'active' : ''; ?>">
-					<a href="<?= site_url('laporan') ?>" class='sidebar-link'>
-						<i class="bi bi-clipboard2-data-fill"></i>
-						<span>Laporan Kandang</span>
-					</a>
-				</li>
 			</ul>
+			<br>
+			<div class="d-flex justify-content-center">
+				<a href="<?= site_url('auth/logout') ?>" id="logoutBtn" class="btn icon icon-left btn-danger">
+					<i class="bi bi-box-arrow-right"></i>
+					Logout
+				</a>
+			</div>
 		</div>
 		<button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
 	</div>
 </div>
+<script>
+	// Ketika tombol logout diklik
+	$('#logoutBtn').click(function(e) {
+		e.preventDefault(); // Mencegah pengalihan langsung ke halaman logout
+
+		// Menampilkan konfirmasi Bootbox
+		bootbox.confirm({
+			message: "Apakah Anda yakin ingin logout?",
+			buttons: {
+				confirm: {
+					label: 'Ya',
+					className: 'btn-success'
+				},
+				cancel: {
+					label: 'Tidak',
+					className: 'btn-danger'
+				}
+			},
+			callback: function(result) {
+				if (result) {
+					// Jika pengguna klik "Ya", arahkan ke halaman logout
+					window.location.href = '<?= site_url('auth/logout') ?>';
+				}
+			}
+		});
+	});
+</script>

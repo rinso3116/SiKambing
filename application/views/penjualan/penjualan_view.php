@@ -123,70 +123,106 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var table_penjualan = $("#table_penjualan").DataTable({
-				"ajax": "<?= site_url('penjualan/penjualan_daftar'); ?>"
+			var table = $('#table_penjualan').DataTable({
+				"ajax": {
+					"url": "<?= site_url('penjualan/penjualan_daftar') ?>",
+					"type": "GET"
+				},
+				dom: 'Bfrtip', // Menampilkan tombol di atas tabel
+				buttons: [{
+						extend: 'excelHtml5',
+						text: 'Export ke Excel',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'pdfHtml5',
+						text: 'Export ke PDF',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'print',
+						text: 'Cetak',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'colvis',
+						text: 'Pilih Kolom'
+					}
+				],
+				responsive: true,
+				language: {
+					url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/id.json' // Bahasa Indonesia
+				}
 			});
+		});
 
-			let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
+		let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
 
-			// Konfigurasi tombol tambah penjualan
-			$(document).on("click", ".btn-penjualan-add", function() {
-				let frame = $("#penjualan_modal");
+		// Konfigurasi tombol tambah penjualan
+		$(document).on("click", ".btn-penjualan-add", function() {
+			let frame = $("#penjualan_modal");
 
-				frame.find(".modal-title").html("Tambah penjualan");
-				frame.find(".modal-body").html(pesan_loading);
-				frame.find(".modal-footer").html(""); // Hapus tombol lama
-				frame.modal("show");
+			frame.find(".modal-title").html("Tambah penjualan");
+			frame.find(".modal-body").html(pesan_loading);
+			frame.find(".modal-footer").html(""); // Hapus tombol lama
+			frame.modal("show");
 
-				// Mengambil form tambah penjualan
-				$.get("<?= site_url('penjualan/penjualan_add'); ?>", function(res) {
-					frame.find(".modal-body").html(res);
-				});
+			// Mengambil form tambah penjualan
+			$.get("<?= site_url('penjualan/penjualan_add'); ?>", function(res) {
+				frame.find(".modal-body").html(res);
 			});
+		});
 
-			// Konfigurasi tombol detail penjualan
-			$(document).on("click", ".btn-penjualan-detail", function() {
-				let id_penjualan = $(this).data("id"); // Ambil ID penjualan dari tombol
-				let frame = $("#penjualan_detail_modal"); // Referensi ke modal
+		// Konfigurasi tombol detail penjualan
+		$(document).on("click", ".btn-penjualan-detail", function() {
+			let id_penjualan = $(this).data("id"); // Ambil ID penjualan dari tombol
+			let frame = $("#penjualan_detail_modal"); // Referensi ke modal
 
-				frame.find(".modal-title").html("Detail penjualan Susu");
-				frame.find(".modal-dinamis").html(pesan_loading);
-				frame.modal("show");
+			frame.find(".modal-title").html("Detail penjualan Susu");
+			frame.find(".modal-dinamis").html(pesan_loading);
+			frame.modal("show");
 
-				// AJAX untuk mendapatkan form detail
-				$.get("<?= site_url('penjualan/penjualan_detail/') ?>" + encodeURIComponent(id_penjualan), function(res) {
-					frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari penjualan_detail.php
-				}).fail(function() {
-					frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail penjualan.</p>');
-				});
+			// AJAX untuk mendapatkan form detail
+			$.get("<?= site_url('penjualan/penjualan_detail/') ?>" + encodeURIComponent(id_penjualan), function(res) {
+				frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari penjualan_detail.php
+			}).fail(function() {
+				frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail penjualan.</p>');
 			});
+		});
 
-			// Konfigurasi tombol edit penjualan
-			$(document).on("click", ".btn-penjualan-edit", function() {
-				let frame = $("#penjualan_modal");
+		// Konfigurasi tombol edit penjualan
+		$(document).on("click", ".btn-penjualan-edit", function() {
+			let frame = $("#penjualan_modal");
 
-				frame.find(".modal-title").html("Edit penjualan");
-				frame.find(".modal-body").html(pesan_loading);
-				frame.find(".modal-footer").html(""); // Hapus tombol lama
-				frame.modal("show");
-				let id_penjualan = $(this).data("id");
+			frame.find(".modal-title").html("Edit penjualan");
+			frame.find(".modal-body").html(pesan_loading);
+			frame.find(".modal-footer").html(""); // Hapus tombol lama
+			frame.modal("show");
+			let id_penjualan = $(this).data("id");
 
-				$.get("<?= site_url('penjualan/penjualan_edit'); ?>/" + id_penjualan, function(res) {
-					frame.find(".modal-dinamis").html(res);
+			$.get("<?= site_url('penjualan/penjualan_edit'); ?>/" + id_penjualan, function(res) {
+				frame.find(".modal-dinamis").html(res);
 
-					// Event submit form edit
-					frame.find("#form-edit-penjualan").on("submit", function(e) {
-						e.preventDefault();
-						let data = $(this).serialize();
-						$.post($(this).attr("action"), data, function(res) {
-							if (res.status == "sukses") {
-								toastr.success("penjualan berhasil diperbarui!", "Berhasil");
-								frame.modal("hide");
-								table_penjualan.ajax.reload();
-							} else {
-								toastr.error(res.pesan, "Gagal");
-							}
-						});
+				// Event submit form edit
+				frame.find("#form-edit-penjualan").on("submit", function(e) {
+					e.preventDefault();
+					let data = $(this).serialize();
+					$.post($(this).attr("action"), data, function(res) {
+						if (res.status == "sukses") {
+							toastr.success("penjualan berhasil diperbarui!", "Berhasil");
+							frame.modal("hide");
+							table_penjualan.ajax.reload();
+						} else {
+							toastr.error(res.pesan, "Gagal");
+						}
 					});
 				});
 			});

@@ -117,63 +117,99 @@
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			var table_pemasukan = $("#table_pemasukan").DataTable({
-				"ajax": "<?= site_url('pemasukan/pemasukan_daftar'); ?>"
+			var table = $('#table_pemasukan').DataTable({
+				"ajax": {
+					"url": "<?= site_url('pemasukan/pemasukan_daftar') ?>",
+					"type": "GET"
+				},
+				dom: 'Bfrtip', // Menampilkan tombol di atas tabel
+				buttons: [{
+						extend: 'excelHtml5',
+						text: 'Export ke Excel',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'pdfHtml5',
+						text: 'Export ke PDF',
+						orientation: 'landscape',
+						pageSize: 'A4',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'print',
+						text: 'Cetak',
+						exportOptions: {
+							columns: ':visible'
+						}
+					},
+					{
+						extend: 'colvis',
+						text: 'Pilih Kolom'
+					}
+				],
+				responsive: true,
+				language: {
+					url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/id.json' // Bahasa Indonesia
+				}
 			});
+		});
 
-			let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
+		let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
 
-			// Konfigurasi tombol tambah pemasukan
-			$(document).on("click", ".btn-pemasukan-add", function() {
-				let frame = $("#pemasukan_modal");
+		// Konfigurasi tombol tambah pemasukan
+		$(document).on("click", ".btn-pemasukan-add", function() {
+			let frame = $("#pemasukan_modal");
 
-				frame.find(".modal-title").html("Tambah Pemasukan");
-				frame.find(".modal-body").html(pesan_loading);
-				frame.find(".modal-footer").html(""); // Hapus tombol lama
-				frame.modal("show");
+			frame.find(".modal-title").html("Tambah Pemasukan");
+			frame.find(".modal-body").html(pesan_loading);
+			frame.find(".modal-footer").html(""); // Hapus tombol lama
+			frame.modal("show");
 
-				// Mengambil form tambah pemasukan
-				$.get("<?= site_url('pemasukan/pemasukan_add'); ?>", function(res) {
-					frame.find(".modal-body").html(res);
-				});
+			// Mengambil form tambah pemasukan
+			$.get("<?= site_url('pemasukan/pemasukan_add'); ?>", function(res) {
+				frame.find(".modal-body").html(res);
 			});
+		});
 
-			// Konfigurasi tombol detail pemasukan
-			$(document).on("click", ".btn-pemasukan-detail", function() {
-				let id_pemasukan = $(this).data("id"); // Ambil ID pemasukan dari tombol
-				let frame = $("#pemasukan_detail_modal"); // Referensi ke modal
+		// Konfigurasi tombol detail pemasukan
+		$(document).on("click", ".btn-pemasukan-detail", function() {
+			let id_pemasukan = $(this).data("id"); // Ambil ID pemasukan dari tombol
+			let frame = $("#pemasukan_detail_modal"); // Referensi ke modal
 
-				frame.find(".modal-title").html("Detail pemasukan Susu");
-				frame.find(".modal-dinamis").html(pesan_loading);
-				frame.modal("show");
+			frame.find(".modal-title").html("Detail pemasukan Susu");
+			frame.find(".modal-dinamis").html(pesan_loading);
+			frame.modal("show");
 
-				// AJAX untuk mendapatkan form detail
-				$.get("<?= site_url('pemasukan/pemasukan_detail/') ?>" + encodeURIComponent(id_pemasukan), function(res) {
-					frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pemasukan_detail.php
-				}).fail(function() {
-					frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pemasukan.</p>');
-				});
+			// AJAX untuk mendapatkan form detail
+			$.get("<?= site_url('pemasukan/pemasukan_detail/') ?>" + encodeURIComponent(id_pemasukan), function(res) {
+				frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pemasukan_detail.php
+			}).fail(function() {
+				frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pemasukan.</p>');
 			});
+		});
 
-			// Konfigurasi tombol edit pemasukan
-			$(document).on("click", ".btn-pemasukan-edit", function() {
-				let frame = $("#pemasukan_modal");
-				frame.find(".modal-title").html("Edit Pemasukan");
-				frame.find(".modal-body").html(pesan_loading);
-				frame.find(".modal-footer").html(""); // Hapus tombol lama
-				frame.modal("show");
+		// Konfigurasi tombol edit pemasukan
+		$(document).on("click", ".btn-pemasukan-edit", function() {
+			let frame = $("#pemasukan_modal");
+			frame.find(".modal-title").html("Edit Pemasukan");
+			frame.find(".modal-body").html(pesan_loading);
+			frame.find(".modal-footer").html(""); // Hapus tombol lama
+			frame.modal("show");
 
-				let id_pemasukan = $(this).data("id");
+			let id_pemasukan = $(this).data("id");
 
-				$.get("<?= site_url('pemasukan/pemasukan_edit'); ?>/" + id_pemasukan, function(res) {
-					frame.find(".modal-dinamis").html(res);
-				});
+			$.get("<?= site_url('pemasukan/pemasukan_edit'); ?>/" + id_pemasukan, function(res) {
+				frame.find(".modal-dinamis").html(res);
 			});
+		});
 
-			// Toastr alert jika pemasukan berasal dari transaksi penjualan
-			$(document).on("click", ".btn-alert-edit", function() {
-				toastr.warning("Pemasukan ini berasal dari penjualan. Silakan edit di menu penjualan.");
-			});
+		// Toastr alert jika pemasukan berasal dari transaksi penjualan
+		$(document).on("click", ".btn-alert-edit", function() {
+			toastr.warning("Pemasukan ini berasal dari penjualan. Silakan edit di menu penjualan.");
 		});
 	</script>
 

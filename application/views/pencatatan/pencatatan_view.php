@@ -124,58 +124,92 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-            // Inisialisasi DataTable dengan jQuery
-            var table_pencatatan = $("#table_pencatatan").DataTable({
-                "ajax": "<?= site_url('pencatatan/pencatatan_daftar'); ?>"
+            var table = $('#table_pencatatan').DataTable({
+                "ajax": {
+                    "url": "<?= site_url('pencatatan/pencatatan_daftar') ?>",
+                    "type": "GET"
+                },
+                dom: 'Bfrtip', // Menampilkan tombol di atas tabel
+                buttons: [{
+                        extend: 'excelHtml5',
+                        text: 'Export ke Excel',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: 'Export ke PDF',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        text: 'Cetak',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    },
+                    {
+                        extend: 'colvis',
+                        text: 'Pilih Kolom'
+                    }
+                ],
+                responsive: true,
+                language: {
+                    url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/id.json' // Bahasa Indonesia
+                }
             });
+        });
 
-            let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
+        let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
 
-            // Konfigurasi tombol tambah pencatatan
-            $(document).on("click", ".btn-pencatatan-add", function() {
-                let frame = $("#pencatatan_modal");
-                frame.find(".modal-title").html("Tambah Pencatatan");
-                frame.find(".modal-body").html(pesan_loading);
-                frame.find(".modal-footer").html(""); // Hapus tombol lama
-                frame.modal("show");
-                // Mengambil form tambah pencatatan
-                $.get("<?= site_url('pencatatan/pencatatan_add'); ?>", function(res) {
-                    frame.find(".modal-body").html(res);
-                });
+        // Konfigurasi tombol tambah pencatatan
+        $(document).on("click", ".btn-pencatatan-add", function() {
+            let frame = $("#pencatatan_modal");
+            frame.find(".modal-title").html("Tambah Pencatatan");
+            frame.find(".modal-body").html(pesan_loading);
+            frame.find(".modal-footer").html(""); // Hapus tombol lama
+            frame.modal("show");
+            // Mengambil form tambah pencatatan
+            $.get("<?= site_url('pencatatan/pencatatan_add'); ?>", function(res) {
+                frame.find(".modal-body").html(res);
             });
+        });
 
-            // Konfigurasi tombol edit pencatatan
-            $(document).on("click", ".btn-pencatatan-edit", function() {
-                let frame = $("#pencatatan_modal");
+        // Konfigurasi tombol edit pencatatan
+        $(document).on("click", ".btn-pencatatan-edit", function() {
+            let frame = $("#pencatatan_modal");
 
-                frame.find(".modal-title").html("Edit Pencatatan");
-                frame.find(".modal-body").html(pesan_loading);
-                frame.find(".modal-footer").html(""); // Hapus tombol lama
-                frame.modal("show");
-                let id_pencatatan = $(this).data("id");
+            frame.find(".modal-title").html("Edit Pencatatan");
+            frame.find(".modal-body").html(pesan_loading);
+            frame.find(".modal-footer").html(""); // Hapus tombol lama
+            frame.modal("show");
+            let id_pencatatan = $(this).data("id");
 
-                $.get("<?= site_url('pencatatan/pencatatan_edit'); ?>/" + id_pencatatan, function(res) {
-                    frame.find(".modal-dinamis").html(res);
-                });
+            $.get("<?= site_url('pencatatan/pencatatan_edit'); ?>/" + id_pencatatan, function(res) {
+                frame.find(".modal-dinamis").html(res);
             });
+        });
 
-            // Konfigurasi tombol detail pencatatan
-            $(document).on("click", ".btn-pencatatan-detail", function() {
-                let id_pencatatan = $(this).data("id"); // Ambil ID pencatatan dari tombol
-                let frame = $("#pencatatan_detail_modal"); // Referensi ke modal
+        // Konfigurasi tombol detail pencatatan
+        $(document).on("click", ".btn-pencatatan-detail", function() {
+            let id_pencatatan = $(this).data("id"); // Ambil ID pencatatan dari tombol
+            let frame = $("#pencatatan_detail_modal"); // Referensi ke modal
 
-                frame.find(".modal-title").html("Detail Pencatatan");
-                frame.find(".modal-dinamis").html(pesan_loading);
-                frame.modal("show");
+            frame.find(".modal-title").html("Detail Pencatatan");
+            frame.find(".modal-dinamis").html(pesan_loading);
+            frame.modal("show");
 
-                // AJAX untuk mendapatkan form detail
-                $.get("<?= site_url('pencatatan/pencatatan_detail/') ?>" + encodeURIComponent(id_pencatatan), function(res) {
-                    frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pencatatan_detail.php
-                }).fail(function() {
-                    frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pencatatan.</p>');
-                });
+            // AJAX untuk mendapatkan form detail
+            $.get("<?= site_url('pencatatan/pencatatan_detail/') ?>" + encodeURIComponent(id_pencatatan), function(res) {
+                frame.find(".modal-dinamis").html(res); // Isi modal dengan konten dari pencatatan_detail.php
+            }).fail(function() {
+                frame.find(".modal-dinamis").html('<p class="text-danger">Terjadi kesalahan saat memuat detail pencatatan.</p>');
             });
-
         });
     </script>
 </div>
