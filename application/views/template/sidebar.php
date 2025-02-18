@@ -67,6 +67,13 @@
 						<span>Pengeluaran Kandang</span>
 					</a>
 				</li>
+				<li class="sidebar-title">Manajemen User</li>
+				<li class="sidebar-item <?= ($uri == 'pengaturan') ? 'active' : ''; ?>">
+					<a href="<?= site_url('pengaturan') ?>" class='sidebar-link'>
+						<i class="bi bi-person-fill-gear"></i>
+						<span>Pengaturan User</span>
+					</a>
+				</li>
 				<li class="sidebar-title">Filter Laporan</li>
 				<li class="sidebar-item <?= ($uri == 'laporan') ? 'active' : ''; ?>">
 					<a href="<?= site_url('laporan') ?>" class='sidebar-link'>
