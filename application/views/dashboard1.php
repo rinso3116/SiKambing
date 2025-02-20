@@ -1,5 +1,5 @@
 <?php $this->load->view('template/header'); ?>
-<?php $this->load->view('template/sidebar'); ?>
+<?php $this->load->view('template/sidebar1'); ?>
 <!-- Main Dashboard Content -->
 <div id="main">
 	<header class="mb-3">
@@ -144,16 +144,6 @@
 									<div class="col-md-3 mb-2">
 										<a href="<?= site_url('penjualan') ?>" class="btn btn-outline-success w-100">
 											<i class="bi bi-cart-check-fill"></i> Penjualan Susu
-										</a>
-									</div>
-									<div class="col-md-3 mb-2">
-										<a href="<?= site_url('pemasukan') ?>" class="btn btn-outline-info w-100">
-											<i class="bi bi-cash-stack"></i> Pemasukan
-										</a>
-									</div>
-									<div class="col-md-3 mb-2">
-										<a href="<?= site_url('pengeluaran') ?>" class="btn btn-outline-warning w-100">
-											<i class="bi bi-wallet-fill"></i> Pengeluaran Kandang
 										</a>
 									</div>
 								</div>

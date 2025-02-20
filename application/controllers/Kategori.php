@@ -1,20 +1,24 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Kategori extends CI_Controller {
+class Kategori extends CI_Controller
+{
     public function __construct()
     {
         parent::__construct();
+        if (!$this->ion_auth->logged_in()) {
+            redirect('auth/login');
+        }
         $this->load->model('Model_kategori');
     }
 
     private function set_output($data)
     {
         $this->output
-        ->set_status_header(200)
-        ->set_content_type('application/json', 'utf-8')
-        ->set_output(json_encode($data, JSON_PRETTY_PRINT))
-        ->_display();
+            ->set_status_header(200)
+            ->set_content_type('application/json', 'utf-8')
+            ->set_output(json_encode($data, JSON_PRETTY_PRINT))
+            ->_display();
         exit;
     }
 
@@ -33,11 +37,11 @@ class Kategori extends CI_Controller {
         $daftar_input = array();
         foreach ($daftar_kategori as $key) {
             $bahan_input = array(
-                $key->id_kategori, 
+                $key->id_kategori,
                 $key->nama_kategori,
                 $key->keterangan_kategori,
                 '<a href="javascript:;" data-id="' . $key->id_kategori . '" class="btn btn-outline-warning btn-kategori-edit btn-sm m-1">Edit</a>' .
-                '<a href="javascript:;" class="btn btn-outline-danger btn-sm btn-kategori-delete" data-id="' . $key->id_kategori . '">Delete</a>',
+                    '<a href="javascript:;" class="btn btn-outline-danger btn-sm btn-kategori-delete" data-id="' . $key->id_kategori . '">Delete</a>',
             );
             array_push($daftar_input, $bahan_input);
         };
@@ -89,7 +93,7 @@ class Kategori extends CI_Controller {
         $id_kategori = $this->input->post('id_kategori');
         $check_kategori = $this->Model_kategori->single_kategori($id_kategori);
 
-        if(!$check_kategori) {
+        if (!$check_kategori) {
             $response = array(
                 'status' => 'gagal',
                 'pesan' => 'Data kategori tidak ditemukan'
@@ -113,4 +117,3 @@ class Kategori extends CI_Controller {
         $this->set_output($response);
     }
 }
-
