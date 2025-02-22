@@ -146,16 +146,19 @@
 											<i class="bi bi-cart-check-fill"></i> Penjualan Susu
 										</a>
 									</div>
-									<div class="col-md-3 mb-2">
-										<a href="<?= site_url('pemasukan') ?>" class="btn btn-outline-info w-100">
-											<i class="bi bi-cash-stack"></i> Pemasukan
-										</a>
-									</div>
-									<div class="col-md-3 mb-2">
-										<a href="<?= site_url('pengeluaran') ?>" class="btn btn-outline-warning w-100">
-											<i class="bi bi-wallet-fill"></i> Pengeluaran Kandang
-										</a>
-									</div>
+
+									<?php if ($role == 'admin') : ?>
+										<div class="col-md-3 mb-2">
+											<a href="<?= site_url('pemasukan') ?>" class="btn btn-outline-info w-100">
+												<i class="bi bi-cash-stack"></i> Pemasukan
+											</a>
+										</div>
+										<div class="col-md-3 mb-2">
+											<a href="<?= site_url('pengeluaran') ?>" class="btn btn-outline-warning w-100">
+												<i class="bi bi-wallet-fill"></i> Pengeluaran Kandang
+											</a>
+										</div>
+									<?php endif; ?>
 								</div>
 							</div>
 						</div>
