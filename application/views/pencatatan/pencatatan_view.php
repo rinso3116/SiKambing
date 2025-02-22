@@ -70,6 +70,7 @@
                                 <th scope="col">No</th>
                                 <th scope="col">Jumlah Susu/hari</th>
                                 <th scope="col">Keterangan</th>
+                                <th scope="col">Tanggal</th>
                                 <th scope="col">Aksi</th>
                             </tr>
                         </thead>

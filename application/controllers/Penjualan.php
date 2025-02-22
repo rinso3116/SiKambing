@@ -50,6 +50,7 @@ class Penjualan extends CI_Controller
                 "Rp. " . number_format($key->harga_per_liter, 0, ',', '.'), // Format harga per liter
                 "Rp. " . number_format($key->total_harga, 0, ',', '.'), // Format total harga
                 $key->menjual_ke,
+                $key->tanggal,
                 '<a href="javascript:;" data-id="' . $key->id_penjualan . '" class="btn btn-warning btn-penjualan-edit btn-sm m-1">Edit</a>' .
                     '<a href="javascript:;" class="btn btn-info btn-sm btn-penjualan-detail" data-id="' . $key->id_penjualan . '">Detail</a>',
             );

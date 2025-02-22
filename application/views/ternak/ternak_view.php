@@ -28,16 +28,16 @@
                 <div class="card-header">
                     <h4 class="col-lg-12">Data Ternak</h4>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="javascript:;" class="btn btn-outline-success btn-ternak-add me-md-2 justify-content-md-end">
+                        <a href="javascript:;" class="btn btn-success btn-ternak-add me-md-2 justify-content-md-end">
                             Tambah Data
-                        </a>                    
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
                     <table id="table_ternak" class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">Id Ternak</th>
+                                <th scope="col">No</th>
                                 <th scope="col">Nama Ternak</th>
                                 <th scope="col">Jenis Ternak</th>
                                 <th scope="col">Jenis Kelamin</th>
@@ -87,94 +87,82 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-           var table_ternak = $("#table_ternak").DataTable({
-            "ajax": {
-                "url": "<?= site_url('ternak/ternak_daftar'); ?>",
-                "dataSrc": function(json) {
-                // Tampilkan total jumlah ternak di footer
-                    $("#total_jumlah_ternak").html(json.total_jumlah + " Ekor");
-                    return json.data;
-                }
-            },
-            "processing": true,
-            "serverSide": false
-        });
-
-           let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
-
-            // Konfigurasi tombol hapus ternak
-           $(document).on("click", ".btn-ternak-delete", function() {
-            var id_ternak = $(this).data("id");
-            var url = "<?= site_url('ternak/ternak_delete_post'); ?>";
-
-            bootbox.confirm({
-                message: "Apakah Anda yakin ingin menghapus ternak ini?",
-                buttons: {
-                    confirm: {
-                        label: "Hapus",
-                        className: "btn-danger"
-                    },
-                    cancel: {
-                        label: "Batal",
-                        className: "btn-secondary"
+            var table_ternak = $("#table_ternak").DataTable({
+                "ajax": {
+                    "url": "<?= site_url('ternak/ternak_daftar'); ?>",
+                    "dataSrc": function(json) {
+                        // Tampilkan total jumlah ternak di footer
+                        $("#total_jumlah_ternak").html(json.total_jumlah + " Ekor");
+                        return json.data;
                     }
                 },
-                callback: function(result) {
-                    if (result) {
-                        $.post(url, { id_ternak: id_ternak }, function(res) {
-                            if (res.status == "sukses") {
-                                toastr.success(res.pesan);
-                                table_ternak.ajax.reload();
-                            } else {
-                                toastr.warning(res.pesan);
-                            }
-                        });
-                    }
-                }
+                "processing": true,
+                "serverSide": false
             });
-        });
+
+            let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
+
+            // Konfigurasi tombol hapus ternak
+            $(document).on("click", ".btn-ternak-delete", function() {
+                var id_ternak = $(this).data("id");
+                var url = "<?= site_url('ternak/ternak_delete_post'); ?>";
+
+                bootbox.confirm({
+                    message: "Apakah Anda yakin ingin menghapus ternak ini?",
+                    buttons: {
+                        confirm: {
+                            label: "Hapus",
+                            className: "btn-danger"
+                        },
+                        cancel: {
+                            label: "Batal",
+                            className: "btn-secondary"
+                        }
+                    },
+                    callback: function(result) {
+                        if (result) {
+                            $.post(url, {
+                                id_ternak: id_ternak
+                            }, function(res) {
+                                if (res.status == "sukses") {
+                                    toastr.success(res.pesan);
+                                    table_ternak.ajax.reload();
+                                } else {
+                                    toastr.warning(res.pesan);
+                                }
+                            });
+                        }
+                    }
+                });
+            });
 
             // Konfigurasi tombol tambah ternak
-           $(document).on("click", ".btn-ternak-add", function() {
-            let frame = $("#ternak_modal");
+            $(document).on("click", ".btn-ternak-add", function() {
+                let frame = $("#ternak_modal");
 
-            frame.find(".modal-title").html("Tambah ternak");
-            frame.find(".modal-dinamis").html(pesan_loading);
-            frame.modal("show");
+                frame.find(".modal-title").html("Tambah ternak");
+                frame.find(".modal-body").html(pesan_loading);
+                frame.find(".modal-footer").html(""); // Hapus tombol lama
+                frame.modal("show");
+                // Mengambil form tambah ternak
+                $.get("<?= site_url('ternak/ternak_add'); ?>", function(res) {
+                    frame.find(".modal-body").html(res);
+                });
+            });
 
-            $.get("<?= site_url('ternak/ternak_add'); ?>", function(res) {
-                frame.find(".modal-dinamis").html(res);
+            // Konfigurasi tombol edit ternak
+            $(document).on("click", ".btn-ternak-edit", function() {
+                let frame = $("#ternak_modal");
 
-                    // Event submit form tambah
-                frame.find("#form-tambah-ternak").on("submit", function(e) {
-                    e.preventDefault();
-                    let data = $(this).serialize();
-                    $.post($(this).attr("action"), data, function(res) {
-                        if (res.status == "sukses") {
-                            toastr.success("ternak berhasil ditambahkan!", "Berhasil");
-                            frame.modal("hide");
-                            table_ternak.ajax.reload();
-                        } else {
-                            toastr.error(res.pesan, "Gagal");
-                        }
-                    });
+                frame.find(".modal-title").html("Edit ternak");
+                frame.find(".modal-dinamis").html(pesan_loading);
+                frame.modal("show");
+                let id_ternak = $(this).data("id");
+                $.get("<?= site_url('ternak/ternak_edit'); ?>/" + id_ternak, function(res) {
+                    frame.find(".modal-dinamis").html(res);
                 });
             });
         });
-
-            // Konfigurasi tombol edit ternak
-           $(document).on("click", ".btn-ternak-edit", function() {
-            let frame = $("#ternak_modal");
-
-            frame.find(".modal-title").html("Edit ternak");
-            frame.find(".modal-dinamis").html(pesan_loading);
-            frame.modal("show");
-            let id_ternak = $(this).data("id");
-            $.get("<?= site_url('ternak/ternak_edit'); ?>/"+id_ternak, function(res) {
-                frame.find(".modal-dinamis").html(res);
-            });
-        });
-       });
-   </script>
+    </script>
 
 </div>

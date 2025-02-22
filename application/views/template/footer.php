@@ -4,7 +4,7 @@
 			<p>&copy; <?= date('Y') ?> SiKambing</p>
 		</div>
 		<div class="float-end">
-			<p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by
+			<p>Design And Develope by
 				<a href="http://instagram.com" target="_blank" rel="noopener noreferrer">Rian Santoso</a>
 			</p>
 		</div>

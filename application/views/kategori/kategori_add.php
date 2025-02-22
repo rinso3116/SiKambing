@@ -17,3 +17,36 @@
     </div>
   </div>
 </form>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Submit form via AJAX
+    $('#form-kategori-add').on('submit', function(e) {
+      e.preventDefault(); // Prevent form from submitting normally
+
+      // Serialize form data
+      var formData = new FormData(this); // 'this' refers to the form element
+
+      // AJAX request
+      $.ajax({
+        url: '<?= site_url("kategori/kategori_addsave") ?>', // Change to your form action URL
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+
+        success: function(response) {
+          // Jika berhasil
+          toastr.success('kategori berhasil ditambahkan!', 'Sukses');
+
+          $('#kategori_modal').modal('hide');
+          $('#table_kategori').DataTable().ajax.reload(); // Memperbarui DataTable
+        },
+        error: function(xhr, status, error) {
+          // Jika terjadi error
+          toastr.error('Terjadi kesalahan saat menambahkan kategori.', 'Error');
+        }
+      });
+    });
+  });
+</script>

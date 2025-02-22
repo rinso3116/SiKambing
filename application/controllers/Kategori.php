@@ -35,13 +35,14 @@ class Kategori extends CI_Controller
         $daftar_kategori = $this->Model_kategori->list_kategori();
 
         $daftar_input = array();
+        $nomor = 1;
         foreach ($daftar_kategori as $key) {
             $bahan_input = array(
-                $key->id_kategori,
+                $nomor++,
                 $key->nama_kategori,
                 $key->keterangan_kategori,
-                '<a href="javascript:;" data-id="' . $key->id_kategori . '" class="btn btn-outline-warning btn-kategori-edit btn-sm m-1">Edit</a>' .
-                    '<a href="javascript:;" class="btn btn-outline-danger btn-sm btn-kategori-delete" data-id="' . $key->id_kategori . '">Delete</a>',
+                '<a href="javascript:;" data-id="' . $key->id_kategori . '" class="btn btn-warning btn-kategori-edit btn-sm m-1">Edit</a>' .
+                    '<a href="javascript:;" class="btn btn-danger btn-sm btn-kategori-delete" data-id="' . $key->id_kategori . '">Delete</a>',
             );
             array_push($daftar_input, $bahan_input);
         };
@@ -85,6 +86,7 @@ class Kategori extends CI_Controller
         ];
 
         $this->Model_kategori->update_kategori($id_kategori, $data);
+
         redirect('kategori');
     }
 
@@ -100,7 +102,7 @@ class Kategori extends CI_Controller
             );
             $this->set_output($response);
         }
-        $check_digunakan = $this->Model_kategori->single_buku_kategori($id_kategori);
+        $check_digunakan = $this->Model_kategori->single_ternak_kategori($id_kategori);
         if ($check_digunakan) {
             $response = array(
                 'status' => 'gagal',

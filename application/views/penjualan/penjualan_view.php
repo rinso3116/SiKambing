@@ -68,6 +68,7 @@
 								<th scope="col">Harga/ltr</th>
 								<th scope="col">Total Harga</th>
 								<th scope="col">Jual Ke</th>
+								<th scope="col">Tanggal</th>
 								<th scope="col">Aksi</th>
 							</tr>
 						</thead>

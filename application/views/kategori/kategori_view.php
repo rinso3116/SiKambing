@@ -28,16 +28,16 @@
                 <div class="card-header">
                     <h4 class="col-lg-12">Data kategori</h4>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a href="javascript:;" class="btn btn-outline-success btn-kategori-add me-md-2 justify-content-md-end">
+                        <a href="javascript:;" class="btn btn-success btn-kategori-add me-md-2 justify-content-md-end">
                             Tambah Data
-                        </a>                    
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
                     <table id="table_kategori" class="table table-striped">
                         <thead>
                             <tr>
-                                <th scope="col">Id kategori</th>
+                                <th scope="col">No</th>
                                 <th scope="col">Nama kategori</th>
                                 <th scope="col">Keterangan kategori</th>
                                 <th scope="col">Aksi</th>
@@ -78,14 +78,14 @@
 
     <script type="text/javascript">
         $(document).ready(function() {
-        // Inisialisasi DataTable dengan jQuery
+            // Inisialisasi DataTable dengan jQuery
             var table_kategori = $("#table_kategori").DataTable({
                 "ajax": "<?= site_url('kategori/kategori_daftar'); ?>"
             });
 
             let pesan_loading = "<p class='text-center'><em>Loading....</em></p>";
 
-        // Konfigurasi tombol hapus kategori
+            // Konfigurasi tombol hapus kategori
             $(document).on("click", ".btn-kategori-delete", function() {
                 var id_kategori = $(this).data("id");
                 var url = "<?= site_url('kategori/kategori_delete_post'); ?>";
@@ -104,7 +104,9 @@
                     },
                     callback: function(result) {
                         if (result) {
-                            $.post(url, { id_kategori: id_kategori }, function(res) {
+                            $.post(url, {
+                                id_kategori: id_kategori
+                            }, function(res) {
                                 if (res.status == "sukses") {
                                     toastr.success(res.pesan);
                                     table_kategori.ajax.reload();
@@ -117,60 +119,31 @@
                 });
             });
 
-        // Konfigurasi tombol tambah kategori
+            /// Konfigurasi tombol tambah kategori
             $(document).on("click", ".btn-kategori-add", function() {
                 let frame = $("#kategori_modal");
-
                 frame.find(".modal-title").html("Tambah kategori");
-                frame.find(".modal-dinamis").html(pesan_loading);
+                frame.find(".modal-body").html(pesan_loading);
+                frame.find(".modal-footer").html(""); // Hapus tombol lama
                 frame.modal("show");
-
+                // Mengambil form tambah kategori
                 $.get("<?= site_url('kategori/kategori_add'); ?>", function(res) {
-                    frame.find(".modal-dinamis").html(res);
-
-                // Event submit form tambah
-                    frame.find("#form-tambah-kategori").on("submit", function(e) {
-                        e.preventDefault();
-                        let data = $(this).serialize();
-                        $.post($(this).attr("action"), data, function(res) {
-                            if (res.status == "sukses") {
-                                toastr.success("Kategori berhasil ditambahkan!", "Berhasil");
-                                frame.modal("hide");
-                                table_kategori.ajax.reload();
-                            } else {
-                                toastr.error(res.pesan, "Gagal");
-                            }
-                        });
-                    });
+                    frame.find(".modal-body").html(res);
                 });
             });
 
-        // Konfigurasi tombol edit kategori
+            // Konfigurasi tombol edit kategori
             $(document).on("click", ".btn-kategori-edit", function() {
                 let frame = $("#kategori_modal");
 
                 frame.find(".modal-title").html("Edit kategori");
-                frame.find(".modal-dinamis").html(pesan_loading);
+                frame.find(".modal-body").html(pesan_loading);
+                frame.find(".modal-footer").html(""); // Hapus tombol lama
                 frame.modal("show");
                 let id_kategori = $(this).data("id");
 
-                $.get("<?= site_url('kategori/kategori_edit'); ?>/"+id_kategori, function(res) {
+                $.get("<?= site_url('kategori/kategori_edit'); ?>/" + id_kategori, function(res) {
                     frame.find(".modal-dinamis").html(res);
-
-                // Event submit form edit
-                    frame.find("#form-edit-kategori").on("submit", function(e) {
-                        e.preventDefault();
-                        let data = $(this).serialize();
-                        $.post($(this).attr("action"), data, function(res) {
-                            if (res.status == "sukses") {
-                                toastr.success("Kategori berhasil diperbarui!", "Berhasil");
-                                frame.modal("hide");
-                                table_kategori.ajax.reload();
-                            } else {
-                                toastr.error(res.pesan, "Gagal");
-                            }
-                        });
-                    });
                 });
             });
         });

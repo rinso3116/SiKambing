@@ -53,6 +53,7 @@ class Pencatatan extends CI_Controller
                 $nomor++,
                 $key->jumlah_susu . " liter",
                 $key->keterangan,
+                $key->tanggal,
                 '<a href="javascript:;" data-id="' . $key->id_pencatatan . '" class="btn btn-warning btn-pencatatan-edit btn-sm m-1">Edit</a>' .
                     '<a href="javascript:;" data-id="' . $key->id_pencatatan . '" class="btn btn-info btn-pencatatan-detail btn-sm m-1">Detail</a>',
             );
